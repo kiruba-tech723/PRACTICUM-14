@@ -1,0 +1,299 @@
+ <!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+<meta charset="UTF-8"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<title>Legal Sphere - Legal Advisory and Documentation</title> 
+<style> 
+* { box-sizing: border-box; margin: 0; padding: 0; } 
+body { font-family: Arial, sans-serif; background: #f2f4f8; color: #222; transition: 0.3s; } 
+body.dark { background: #1b1f2a; color: #eee; } 
+header { background: #1f3a5f; color: #fff; padding: 15px 25px; display: flex; justify-content: space
+between; align-items: center; } 
+header h1 { font-size: 24px; } 
+button { cursor: pointer; border: none; border-radius: 5px; padding: 8px 14px; background: 
+#c8963e; color: #fff; font-size: 14px; } 
+button:hover { opacity: 0.85; } 
+nav { display: flex; gap: 8px; padding: 12px 25px; background: #dfe5ee; flex-wrap: wrap; } 
+body.dark nav { background: #2a3040; } 
+nav button.active { background: #1f3a5f; } 
+main { max-width: 900px; margin: 20px auto; padding: 0 15px; } 
+section { display: none; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 
+6px rgba(0,0,0,0.15); } 
+body.dark section { background: #262c3b; } 
+section.show { display: block; } 
+h2 { margin-bottom: 12px; } 
+ 
+label { display: block; margin-top: 12px; font-weight: bold; } 
+input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #999; 
+border-radius: 4px; font-size: 14px; } 
+.error { color: #d62828; font-size: 13px; min-height: 16px; } 
+.success { color: #1b8a3b; font-weight: bold; margin-top: 10px; } 
+.counter { font-size: 12px; text-align: right; } 
+.faq-item { border: 1px solid #aaa; border-radius: 5px; margin-bottom: 8px; } 
+.faq-q { width: 100%; text-align: left; background: #1f3a5f; border-radius: 5px 5px 0 0; padding: 
+10px; } 
+.faq-a { display: none; padding: 10px; } 
+.faq-item.open .faq-a { display: block; } 
+#preview { margin-top: 15px; padding: 15px; border: 2px dashed #1f3a5f; white-space: pre-wrap; 
+line-height: 1.6; min-height: 80px; } 
+.row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; } 
+ul { margin-top: 10px; padding-left: 20px; } 
+li { margin-bottom: 6px; } 
+</style> 
+</head> 
+<body> 
+<header> 
+<h1>Legal Sphere</h1> 
+<button id="themeBtn">Dark Mode</button> 
+</header> 
+<nav id="menu"> 
+<button class="active" data-target="home">Home</button> 
+<button data-target="advice">Legal Advisory</button> 
+<button data-target="docs">Documentation</button> 
+<button data-target="faq">FAQ</button> 
+</nav> 
+<main> 
+<section id="home" class="show"> 
+<h2>Welcome to Legal Sphere</h2> 
+<p>Get simple legal guidance and generate basic legal documents online.</p> 
+<label for="areaFilter">Choose a legal area to see services:</label> 
+<select id="areaFilter"> 
+<option value="">-- Select --</option> 
+<option value="family">Family Law</option> 
+<option value="property">Property Law</option> 
+<option value="business">Business Law</option> 
+<option value="cyber">Cyber Law</option> 
+</select> 
+<ul id="serviceList"></ul> 
+<p style="margin-top:15px;">Visitors counter: <b id="visitCount">0</b> 
+<button id="visitBtn">Count Me</button></p> 
+</section> 
+<section id="advice"> 
+<h2>Request Legal Advice</h2> 
+<form id="adviceForm" novalidate> 
+<label for="name">Full Name</label> 
+<input type="text" id="name" placeholder="Enter your name"> 
+<div class="error" id="nameErr"></div> 
+<label for="email">Email</label> 
+<input type="email" id="email" placeholder="Enter your email"> 
+<div class="error" id="emailErr"></div> 
+<label for="category">Category</label> 
+<select id="category"> 
+ 
+<option value="">-- Select --</option> 
+<option>Family Law</option> 
+<option>Property Law</option> 
+<option>Business Law</option> 
+<option>Cyber Law</option> 
+</select> 
+<div class="error" id="catErr"></div> 
+<label for="query">Describe your issue</label> 
+<textarea id="query" rows="5" maxlength="300"></textarea> 
+<div class="counter"><span id="charCount">0</span>/300</div> 
+<div class="error" id="queryErr"></div> 
+<div class="row"> 
+<button type="submit">Submit</button> 
+<button type="reset" id="resetBtn">Clear</button> 
+</div> 
+</form> 
+<div class="success" id="adviceMsg"></div> 
+</section> 
+<section id="docs"> 
+<h2>Document Generator</h2> 
+<label for="docType">Document Type</label> 
+<select id="docType"> 
+<option value="rent">Rental Agreement</option> 
+<option value="nda">Non-Disclosure Agreement</option> 
+<option value="affidavit">Affidavit</option> 
+</select> 
+<label for="partyA">First Party Name</label> 
+<input type="text" id="partyA" placeholder="e.g. Ravi Kumar"> 
+<label for="partyB">Second Party Name</label> 
+<input type="text" id="partyB" placeholder="e.g. Anita Sharma"> 
+<label for="docDate">Date</label> 
+<input type="date" id="docDate"> 
+<div class="row"> 
+<button id="copyBtn">Copy Text</button> 
+<button id="clearDoc">Clear</button> 
+</div> 
+<div id="preview"></div> 
+<div class="success" id="docMsg"></div> 
+</section> 
+<section id="faq"> 
+<h2>Frequently Asked Questions</h2> 
+<div class="faq-item"> 
+<button class="faq-q">What is an FIR?</button> 
+<div class="faq-a">A First Information Report is a written document prepared by the police when 
+they receive information about a cognizable offence.</div> 
+</div> 
+<div class="faq-item"> 
+<button class="faq-q">Why is stamp paper needed?</button> 
+<div class="faq-a">Stamp paper makes an agreement legally valid and enforceable as evidence in 
+court.</div> 
+</div> 
+<div class="faq-item"> 
+<button class="faq-q">What is an affidavit?</button> 
+<div class="faq-a">An affidavit is a written statement of facts confirmed by the person making it, 
+usually on oath.</div> 
+ 
+</div> 
+</section> 
+</main> 
+<script> 
+const menuButtons = document.querySelectorAll("#menu button"); 
+const sections = document.querySelectorAll("section"); 
+const themeBtn = document.getElementById("themeBtn"); 
+menuButtons.forEach(function (btn) { 
+btn.addEventListener("click", function () { 
+menuButtons.forEach(function (b) { b.classList.remove("active"); }); 
+sections.forEach(function (s) { s.classList.remove("show"); }); 
+btn.classList.add("active"); 
+document.getElementById(btn.dataset.target).classList.add("show"); 
+}); 
+}); 
+themeBtn.addEventListener("click", function () { 
+document.body.classList.toggle("dark"); 
+themeBtn.textContent = document.body.classList.contains("dark") ? "Light Mode" : "Dark 
+Mode"; 
+}); 
+const services = { 
+family: ["Divorce and separation advice", "Child custody guidance", "Adoption 
+documentation"], 
+property: ["Sale deed drafting", "Rental agreement review", "Title verification"], 
+business: ["Company registration help", "Contract drafting", "Trademark filing guidance"], 
+cyber: ["Online fraud complaints", "Data privacy advice", "Cyber crime reporting"] 
+}; 
+const areaFilter = document.getElementById("areaFilter"); 
+const serviceList = document.getElementById("serviceList"); 
+areaFilter.addEventListener("change", function () { 
+serviceList.innerHTML = ""; 
+const items = services[areaFilter.value] || []; 
+items.forEach(function (text) { 
+const li = document.createElement("li"); 
+li.textContent = text; 
+serviceList.appendChild(li); 
+}); 
+}); 
+let visits = 0; 
+const visitCount = document.getElementById("visitCount"); 
+document.getElementById("visitBtn").addEventListener("click", function () { 
+visits++; 
+visitCount.textContent = visits; 
+}); 
+const form = document.getElementById("adviceForm"); 
+const nameInput = document.getElementById("name"); 
+const emailInput = document.getElementById("email"); 
+const category = document.getElementById("category"); 
+const query = document.getElementById("query"); 
+const charCount = document.getElementById("charCount"); 
+Karunya Institute of Technology and Sciences                                                                                        
+Page 23 of 35 
+OBCFC - Practicum Manual (2025-26)                                 
+Division of Computer Science and Engineering 
+const adviceMsg = document.getElementById("adviceMsg"); 
+query.addEventListener("input", function () { 
+charCount.textContent = query.value.length; 
+}); 
+nameInput.addEventListener("input", function () { 
+document.getElementById("nameErr").textContent = 
+nameInput.value.trim().length < 3 ? "Name must have at least 3 characters" : ""; 
+}); 
+emailInput.addEventListener("input", function () { 
+const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
+document.getElementById("emailErr").textContent = 
+pattern.test(emailInput.value) ? "" : "Enter a valid email address"; 
+}); 
+form.addEventListener("submit", function (e) { 
+e.preventDefault(); 
+let valid = true; 
+if (nameInput.value.trim().length < 3) { 
+document.getElementById("nameErr").textContent = "Name must have at least 3 characters"; 
+valid = false; 
+} 
+if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value)) { 
+document.getElementById("emailErr").textContent = "Enter a valid email address"; 
+valid = false; 
+} 
+if (category.value === "") { 
+document.getElementById("catErr").textContent = "Please select a category"; 
+valid = false; 
+} else { 
+document.getElementById("catErr").textContent = ""; 
+} 
+if (query.value.trim().length < 20) { 
+document.getElementById("queryErr").textContent = "Describe your issue in at least 20 
+characters"; 
+valid = false; 
+} else { 
+document.getElementById("queryErr").textContent = ""; 
+} 
+if (valid) { 
+adviceMsg.textContent = "Thank you, " + nameInput.value.trim() + ". Your " + category.value 
++ " request has been received."; 
+form.reset(); 
+charCount.textContent = 0; 
+} else { 
+adviceMsg.textContent = ""; 
+} 
+}); 
+document.getElementById("resetBtn").addEventListener("click", function () { 
+document.querySelectorAll(".error").forEach(function (el) { el.textContent = ""; }); 
+adviceMsg.textContent = ""; 
+charCount.textContent = 0; 
+}); 
+ 
+const docType = document.getElementById("docType"); 
+const partyA = document.getElementById("partyA"); 
+const partyB = document.getElementById("partyB"); 
+const docDate = document.getElementById("docDate"); 
+const preview = document.getElementById("preview"); 
+const docMsg = document.getElementById("docMsg"); 
+function buildDocument() { 
+const a = partyA.value.trim() || "__________"; 
+const b = partyB.value.trim() || "__________"; 
+const d = docDate.value || "__________"; 
+let text = ""; 
+if (docType.value === "rent") { 
+text = "RENTAL AGREEMENT\n\nThis agreement is made on " + d + " between " + a + " 
+(Landlord) and " + b + " (Tenant).\n\n1. The Tenant shall pay the monthly rent on or before the 
+5th of every month.\n2. The Tenant shall keep the property in good condition.\n3. Either party may 
+end this agreement by giving one month's written notice.\n\nSignature of Landlord: " + a + 
+"\nSignature of Tenant: " + b; 
+} else if (docType.value === "nda") { 
+text = "NON-DISCLOSURE AGREEMENT\n\nThis agreement is made on " + d + " between " 
++ a + " (Disclosing Party) and " + b + " (Receiving Party).\n\n1. The Receiving Party shall keep all 
+shared information confidential.\n2. The information shall be used only for the agreed purpose.\n3. 
+This duty continues for two years after the agreement ends.\n\nSigned by: " + a + " and " + b; 
+} else { 
+text = "AFFIDAVIT\n\nI, " + a + ", do hereby solemnly affirm on " + d + " that the statements 
+made in this document are true to the best of my knowledge.\n\nWitnessed by: " + b + 
+"\n\nSignature of Deponent: " + a; 
+} 
+preview.textContent = text; 
+docMsg.textContent = ""; 
+} 
+[docType, partyA, partyB, docDate].forEach(function (el) { 
+el.addEventListener("input", buildDocument); 
+}); 
+document.getElementById("copyBtn").addEventListener("click", function () { 
+navigator.clipboard.writeText(preview.textContent).then(function () { 
+docMsg.textContent = "Document text copied."; 
+}); 
+}); 
+document.getElementById("clearDoc").addEventListener("click", function () { 
+partyA.value = ""; 
+partyB.value = ""; 
+docDate.value = ""; 
+buildDocument(); 
+}); 
+buildDocument(); 
+document.querySelectorAll(".faq-q").forEach(function (q) { 
+q.addEventListener("click", function () { 
+q.parentElement.classList.toggle("open"); 
+}); 
+}); 
+</script> 
+</body> 
+</html> 
+ 
